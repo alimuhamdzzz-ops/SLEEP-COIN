@@ -72,16 +72,16 @@ function init() {
     renderer.toneMappingExposure = 1.2;
     renderer.outputEncoding = THREE.sRGBEncoding;
 
-    // Orbit Controls (gentle rotation)
-    controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
-    controls.enablePan = false;
-    controls.minDistance = 2;
-    controls.maxDistance = 8;
-    controls.maxPolarAngle = Math.PI / 2;
-    controls.autoRotate = true;
-    controls.autoRotateSpeed = 0.5;
+    // Orbit Controls (gentle rotation) - Simplified without OrbitControls
+    // controls = new OrbitControls(camera, renderer.domElement);
+    // controls.enableDamping = true;
+    // controls.dampingFactor = 0.05;
+    // controls.enablePan = false;
+    // controls.minDistance = 2;
+    // controls.maxDistance = 8;
+    // controls.maxPolarAngle = Math.PI / 2;
+    // controls.autoRotate = true;
+    // controls.autoRotateSpeed = 0.5;
 
     // Setup Lighting
     setupLighting();
@@ -219,52 +219,17 @@ function setupEnvironment() {
 // ============================================
 
 function loadCharacterModel() {
-    const loader = new THREE.GLTFLoader(loadingManager);
-
-    // Try to load model from models folder
-    // If no model exists, we'll create a placeholder
-    loader.load(
-        'models/sleeper.glb',
-        function (gltf) {
-            character = gltf.scene;
-            
-            // Position and scale character
-            character.position.set(0, 0.3, 0);
-            character.rotation.y = Math.PI / 2; // Facing side
-            character.scale.set(1, 1, 1);
-            
-            // Enable shadows
-            character.traverse((node) => {
-                if (node.isMesh) {
-                    node.castShadow = true;
-                    node.receiveShadow = true;
-                    
-                    // Improve material quality
-                    if (node.material) {
-                        node.material.needsUpdate = true;
-                    }
-                }
-            });
-
-            // Find bones for animation (if available)
-            findCharacterBones(character);
-            
-            // Store base positions
-            characterBaseY = character.position.y;
-            
-            scene.add(character);
-            console.log('Character model loaded successfully');
-        },
-        function (xhr) {
-            // Progress callback
-            const percentComplete = (xhr.loaded / xhr.total) * 100;
-            console.log(`Model ${percentComplete.toFixed(2)}% loaded`);
-        },
-        function (error) {
-            console.error('Error loading model, creating placeholder', error);
-            createPlaceholderCharacter();
-        }
-    );
+    // Since GLTFLoader may not be available, create placeholder directly
+    console.log('Creating placeholder character (GLTFLoader not available in this setup)');
+    createPlaceholderCharacter();
+    
+    // Simulate loading complete
+    setTimeout(() => {
+        loadingScreen.classList.add('fade-out');
+        setTimeout(() => {
+            loadingScreen.style.display = 'none';
+        }, 500);
+    }, 1000);
 }
 
 // ============================================
@@ -449,9 +414,14 @@ function animate() {
     // Update breathing animation
     updateBreathing(deltaTime);
     
-    // Update controls
-    if (controls) {
-        controls.update();
+    // Update controls (disabled for now)
+    // if (controls) {
+    //     controls.update();
+    // }
+    
+    // Simple auto-rotation
+    if (character) {
+        character.rotation.y += 0.001;
     }
     
     // Render scene
