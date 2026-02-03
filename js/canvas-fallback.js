@@ -6,6 +6,7 @@
 // Canvas and context
 let canvas, ctx;
 let time = 0;
+let lastFrameTime = 0;
 const breathingSpeed = 0.5;
 const breathingIntensity = 0.15;
 
@@ -34,13 +35,23 @@ function init() {
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
     
-    // Hide loading screen
-    setTimeout(() => {
-        loadingScreen.classList.add('fade-out');
-        setTimeout(() => {
-            loadingScreen.style.display = 'none';
-        }, 500);
-    }, 1000);
+    // Animate progress bar
+    let progress = 0;
+    const progressInterval = setInterval(() => {
+        progress += 5;
+        progressFill.style.width = progress + '%';
+        progressText.textContent = progress + '%';
+        if (progress >= 100) {
+            clearInterval(progressInterval);
+            // Hide loading screen
+            setTimeout(() => {
+                loadingScreen.classList.add('fade-out');
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 500);
+            }, 300);
+        }
+    }, 30);
     
     // Start animation
     animate();
@@ -129,7 +140,7 @@ function drawPillow() {
     const breathOffset = Math.sin(time * breathingSpeed) * breathingIntensity * 15;
     
     ctx.save();
-    ctx.translate(character.x + 80, character.y - 30 + breathOffset * 0.5);
+    ctx.translate(character.x + 95, character.y - 30 + breathOffset * 0.5);
     
     // Pillow
     ctx.fillStyle = '#f5e6d3';
@@ -157,6 +168,7 @@ function drawCharacter() {
     const breathScale = 1.0 + Math.sin(time * breathingSpeed) * breathingIntensity * 0.08;
     
     ctx.save();
+    // Center the character properly
     ctx.translate(character.x, character.y + breathOffset);
     
     // Draw hair (behind head)
@@ -182,13 +194,13 @@ function drawHair() {
     
     // Hair shape (ponytail/loose)
     ctx.beginPath();
-    ctx.ellipse(85, -35, 35, 30, 0, 0, Math.PI * 2);
+    ctx.ellipse(100, -35, 35, 30, 0, 0, Math.PI * 2);
     ctx.fill();
     
     // Hair highlights
     ctx.fillStyle = 'rgba(80, 50, 30, 0.5)';
     ctx.beginPath();
-    ctx.ellipse(75, -40, 15, 10, -0.3, 0, Math.PI * 2);
+    ctx.ellipse(90, -40, 15, 10, -0.3, 0, Math.PI * 2);
     ctx.fill();
     
     ctx.restore();
@@ -196,7 +208,7 @@ function drawHair() {
 
 function drawHead() {
     ctx.save();
-    ctx.translate(85, -30);
+    ctx.translate(100, -30);
     
     // Head (skin tone)
     ctx.fillStyle = '#ffd0b0';
@@ -254,7 +266,7 @@ function drawBody(breathScale) {
     // Body (plaid shirt - orange/red checkered)
     const bodyWidth = 80;
     const bodyHeight = 50;
-    const bodyX = -20;
+    const bodyX = 30;
     const bodyY = -10;
     
     // Shirt base color
@@ -272,7 +284,7 @@ function drawBody(breathScale) {
     ctx.lineWidth = 3;
     
     // Vertical stripes
-    for (let i = -80; i < 60; i += 15) {
+    for (let i = -40; i < 90; i += 15) {
         ctx.beginPath();
         ctx.moveTo(i, -50);
         ctx.lineTo(i, 30);
@@ -282,8 +294,8 @@ function drawBody(breathScale) {
     // Horizontal stripes
     for (let i = -45; i < 35; i += 15) {
         ctx.beginPath();
-        ctx.moveTo(-90, i);
-        ctx.lineTo(50, i);
+        ctx.moveTo(-50, i);
+        ctx.lineTo(100, i);
         ctx.stroke();
     }
     
@@ -291,7 +303,7 @@ function drawBody(breathScale) {
     ctx.strokeStyle = '#cc4444';
     ctx.lineWidth = 2;
     
-    for (let i = -73; i < 60; i += 30) {
+    for (let i = -33; i < 90; i += 30) {
         ctx.beginPath();
         ctx.moveTo(i, -50);
         ctx.lineTo(i, 30);
@@ -300,8 +312,8 @@ function drawBody(breathScale) {
     
     for (let i = -38; i < 35; i += 30) {
         ctx.beginPath();
-        ctx.moveTo(-90, i);
-        ctx.lineTo(50, i);
+        ctx.moveTo(-50, i);
+        ctx.lineTo(100, i);
         ctx.stroke();
     }
     
@@ -318,21 +330,21 @@ function drawLegs() {
     
     // Left leg
     ctx.beginPath();
-    ctx.ellipse(-70, 20, 20, 55, 0, 0, Math.PI * 2);
+    ctx.ellipse(-20, 20, 20, 55, 0, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
     
     // Right leg (behind)
     ctx.beginPath();
-    ctx.ellipse(-90, 25, 18, 50, 0, 0, Math.PI * 2);
+    ctx.ellipse(-40, 25, 18, 50, 0, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
     
     // Polka dot pattern
     ctx.fillStyle = '#8fbc3f';
     const dots = [
-        [-75, 5], [-65, 25], [-80, 40], [-60, 45],
-        [-95, 15], [-85, 35], [-100, 50]
+        [-25, 5], [-15, 25], [-30, 40], [-10, 45],
+        [-45, 15], [-35, 35], [-50, 50]
     ];
     
     dots.forEach(([x, y]) => {
@@ -354,12 +366,12 @@ function drawBlanket() {
     ctx.lineWidth = 2;
     
     ctx.beginPath();
-    ctx.moveTo(-130, 0);
-    ctx.quadraticCurveTo(-100, -10, -60, 0);
-    ctx.quadraticCurveTo(-20, 10, 20, 5);
-    ctx.lineTo(20, 50);
-    ctx.quadraticCurveTo(-20, 60, -80, 55);
-    ctx.quadraticCurveTo(-120, 50, -130, 40);
+    ctx.moveTo(-80, 0);
+    ctx.quadraticCurveTo(-50, -10, -10, 0);
+    ctx.quadraticCurveTo(30, 10, 70, 5);
+    ctx.lineTo(70, 50);
+    ctx.quadraticCurveTo(30, 60, -30, 55);
+    ctx.quadraticCurveTo(-70, 50, -80, 40);
     ctx.closePath();
     ctx.fill();
     ctx.stroke();
@@ -367,7 +379,7 @@ function drawBlanket() {
     // Blanket texture
     ctx.strokeStyle = '#e8c0c0';
     ctx.lineWidth = 1;
-    for (let i = -120; i < 10; i += 10) {
+    for (let i = -70; i < 60; i += 10) {
         ctx.beginPath();
         ctx.moveTo(i, 5);
         ctx.lineTo(i, 50);
@@ -381,11 +393,16 @@ function drawBlanket() {
 // BREATHING ANIMATION
 // ============================================
 
-function animate() {
+function animate(timestamp) {
     requestAnimationFrame(animate);
     
-    // Update time
-    time += 0.016; // ~60 FPS
+    // Calculate delta time for frame-rate independent animation
+    if (!lastFrameTime) lastFrameTime = timestamp;
+    const deltaTime = (timestamp - lastFrameTime) / 1000; // Convert to seconds
+    lastFrameTime = timestamp;
+    
+    // Update time (capped to prevent huge jumps)
+    time += Math.min(deltaTime, 0.1);
     
     // Draw scene
     drawScene();
