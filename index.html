@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peaceful Sleep - 3D Sleeping Character</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="loader-container">
+            <div class="loader"></div>
+            <p class="loading-text">Loading peaceful dreams...</p>
+            <div class="progress-bar">
+                <div id="progress-fill" class="progress-fill"></div>
+            </div>
+            <p id="progress-text" class="progress-percentage">0%</p>
+        </div>
+    </div>
+
+    <!-- WebGL Not Supported Fallback -->
+    <div id="webgl-error" class="error-message" style="display: none;">
+        <h2>WebGL Not Supported</h2>
+        <p>Your browser doesn't support WebGL, which is required for this experience.</p>
+        <p>Please try using a modern browser like Chrome, Firefox, Safari, or Edge.</p>
+    </div>
+
+    <!-- Model Load Error -->
+    <div id="model-error" class="error-message" style="display: none;">
+        <h2>Unable to Load 3D Model</h2>
+        <p>There was an error loading the 3D character model.</p>
+        <p>Please refresh the page or check your internet connection.</p>
+    </div>
+
+    <!-- Main Three.js Canvas -->
+    <canvas id="scene-canvas"></canvas>
+
+    <!-- Three.js Library - Local fallback -->
+    <script>
+        // Check if Three.js is needed and provide instructions
+        console.log('%cThree.js Setup Instructions:', 'color: blue; font-size: 14px; font-weight: bold;');
+        console.log('To use Three.js with this project:');
+        console.log('1. Download Three.js r160 from https://github.com/mrdoob/three.js/releases/tag/r160');
+        console.log('2. Extract three.min.js from the build/ directory');
+        console.log('3. Place it in the js/ folder');
+        console.log('4. Update index.html to load it');
+        console.log('\nFor now, using canvas-based breathing animation...');
+    </script>
+    
+    <!-- Main Application Script -->
+    <script src="js/canvas-fallback.js"></script>
+</body>
+</html>
